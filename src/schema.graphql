@@ -1,0 +1,36 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type User {
+  id: String!
+  email: String!
+  name: String!
+}
+
+type Team {
+  id: String!
+  name: String!
+  owner: User!
+}
+
+type Vote {
+  id: String!
+  choice: String!
+  team: Team!
+  user: User!
+}
+
+type Query {
+  teams: [Team!]!
+  voteResults(teamId: String!): [Vote!]!
+  users: [User!]!
+  user(id: String!): User!
+}
+
+type Mutation {
+  createTeam(name: String!, ownerId: String!): Team!
+  joinTeam(userId: String!, teamId: String!): Boolean!
+  vote(userId: String!, teamId: String!, choice: String!): Boolean!
+  createUser(email: String!, name: String!): User!
+}

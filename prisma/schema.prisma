@@ -1,0 +1,51 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(uuid())
+  email     String   @unique
+  name      String
+  teams     TeamMember[]  // 사용자가 가입한 팀들
+  ownedTeams Team[]    // 사용자가 소유한 팀들 (관리자 역할)
+  votes     Vote[]   // 사용자가 참여한 투표들
+}
+
+model Team {
+  id         String      @id @default(uuid())
+  name       String      @unique
+  ownerId    String
+  owner      User        @relation(fields: [ownerId], references: [id])  // ownerId를 참조하여 User와 연결
+  members    TeamMember[] 
+  votes      Vote[]
+}
+
+model TeamMember {
+  id     String @id @default(uuid())
+  userId String
+  teamId String
+  user   User  @relation(fields: [userId], references: [id])
+  team   Team  @relation(fields: [teamId], references: [id])
+
+  @@unique([userId, teamId])  // 중복 가입 방지
+}
+
+model Vote {
+  id       String @id @default(uuid())
+  teamId   String
+  userId   String
+  choice   String
+  createdAt DateTime @default(now())
+  team     Team  @relation(fields: [teamId], references: [id])
+  user     User  @relation(fields: [userId], references: [id])
+}
