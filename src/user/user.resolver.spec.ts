@@ -17,7 +17,7 @@ describe('UserResolver', () => {
           provide: UserService,
           //UserService를 가짜(Mock)로 만듦
           useValue: {
-            //함수이름(provide의 UserService의 이름과 같아야함) : 리턴값
+            //함수이름(provide의 UserService) : 리턴값
             findAll: jest
               .fn()
               .mockResolvedValue([
